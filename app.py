@@ -1,10 +1,11 @@
 import uvicorn
 from fastapi import FastAPI
 
+app = FastAPI()
+
 
 def main():
-    app = FastAPI()
-    uvicorn.run('app:app', reload=True)
+    uvicorn.run('app:app', host='0.0.0.0', port=8000, reload=True)
 
 
 if __name__ == '__main__':

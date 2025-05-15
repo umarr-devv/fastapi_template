@@ -3,7 +3,7 @@ from contextlib import asynccontextmanager
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from typing_extensions import AsyncGenerator
 
-from core.config import ConfigModel
+from core.config import ConfigModel, config
 
 
 class DataBase:
@@ -19,8 +19,10 @@ class DataBase:
             expire_on_commit=False,
         )
 
-    @asynccontextmanager
-    async def session_dependency(self) -> AsyncGenerator[AsyncSession]:
+    async def session_dependency(self) -> AsyncGenerator[AsyncSession, None]:
         async with self.session_factory() as session:
             yield session
             await session.close()
+
+
+db = DataBase(config)

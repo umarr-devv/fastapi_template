@@ -1,9 +1,12 @@
 import uvicorn
 from fastapi import FastAPI
 
+from admin import register_admin
 from api import router
 
 app = FastAPI()
+
+register_admin(app)
 app.include_router(router)
 
 

@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "fastapi-template"
+version = "0.1.0"
+description = ""
+authors = ["umarr <umarr.developer@gmail.com>"]
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.115.12"
+sqlalchemy = "^2.0.41"
+alembic = "^1.15.2"
+asyncpg = "^0.30.0"
+bcrypt = "^4.3.0"
+mypy = "^1.15.0"
+pydantic = "^2.11.4"
+pyjwt = "^2.10.1"
+python-dotenv = "^1.1.0"
+uvicorn = "^0.34.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

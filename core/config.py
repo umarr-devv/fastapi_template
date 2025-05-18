@@ -12,6 +12,7 @@ class ConfigModel(BaseModel):
     pg_database: str
     pg_user: str
     pg_password: str
+    log_level: str
     jwt_private_key: str
 
     @property
@@ -24,5 +25,6 @@ config = ConfigModel(
     pg_database=os.getenv('pg_database'),
     pg_user=os.getenv('pg_user'),
     pg_password=os.getenv('pg_password'),
+    log_level=os.getenv('log_level'),
     jwt_private_key=os.getenv('jwt_private_key'),
 )

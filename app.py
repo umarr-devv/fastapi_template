@@ -3,7 +3,10 @@ from fastapi import FastAPI
 
 from admin import register_admin
 from api import router
+from core.config import config
+from logger import set_logging
 
+set_logging(config)
 app = FastAPI()
 
 register_admin(app)

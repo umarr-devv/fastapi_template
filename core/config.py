@@ -3,7 +3,7 @@ import os
 import dotenv
 from pydantic import BaseModel
 
-ENV_PATH = os.getcwd().join('.env')
+ENV_PATH = os.getcwd().join('.env-docker')
 dotenv.load_dotenv()
 
 
@@ -21,10 +21,10 @@ class ConfigModel(BaseModel):
 
 
 config = ConfigModel(
-    pg_host=os.getenv('pg_host'),
-    pg_database=os.getenv('pg_database'),
-    pg_user=os.getenv('pg_user'),
-    pg_password=os.getenv('pg_password'),
-    log_level=os.getenv('log_level'),
-    jwt_private_key=os.getenv('jwt_private_key'),
+    pg_host=os.getenv('PG_HOST'),
+    pg_database=os.getenv('PG_DATABASE'),
+    pg_user=os.getenv('PG_USER'),
+    pg_password=os.getenv('PG_PASSWORD'),
+    log_level=os.getenv('LOG_LEVEL'),
+    jwt_private_key=os.getenv('JWT_PRIVATE_KEY'),
 )

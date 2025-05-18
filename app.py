@@ -2,15 +2,20 @@ import uvicorn
 from fastapi import FastAPI
 
 from admin import register_admin
-from api import router
+from api import router as api_router
+from views import router as views_router
 from core.config import config
+from core.templates import mount_static
 from logger import set_logging
 
-set_logging(config)
 app = FastAPI()
 
+set_logging(config)
 register_admin(app)
-app.include_router(router)
+mount_static(app)
+
+app.include_router(api_router)
+app.include_router(views_router)
 
 
 def main():

@@ -1,4 +1,5 @@
 from logging import StreamHandler, basicConfig
+import logging
 from logging.handlers import TimedRotatingFileHandler
 from pathlib import Path
 
@@ -25,3 +26,4 @@ def set_logging(config: ConfigModel):
             )
         ]
     )
+    logging.getLogger("watchfiles.main").setLevel(logging.WARNING)

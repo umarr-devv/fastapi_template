@@ -11,7 +11,7 @@ class JWTService:
     @staticmethod
     def encode(
             payload: dict,
-            expires_delta: timedelta,
+            expires_delta: timedelta = timedelta(days=28),
     ) -> str:
         to_encode = payload.copy()
         to_encode.update({"exp": datetime.now(timezone.utc) + expires_delta})

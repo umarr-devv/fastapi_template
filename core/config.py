@@ -3,7 +3,7 @@ import os
 import dotenv
 from pydantic import BaseModel
 
-ENV_PATH = os.getcwd().join('.env-docker')
+ENV_PATH = os.getcwd().join('.env')
 dotenv.load_dotenv()
 
 

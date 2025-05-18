@@ -1,0 +1,20 @@
+{
+    "configurations": [
+        {
+            "type": "python",
+            "name": "Hypercorn",
+            "file": "",
+            "module": "hypercorn",
+            "arguments": [
+                "app:app",
+                "--config",
+                "hypercorn.toml"
+            ]
+        },
+        {
+            "type": "python",
+            "name": "Uvicorn",
+            "file": "app.py",
+        }
+    ]
+}

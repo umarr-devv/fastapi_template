@@ -24,4 +24,4 @@ def set_logging(config: ConfigModel):
             )
         ]
     )
-    logging.getLogger("watchfiles.main").setLevel(logging.WARNING)
+    logging.getLogger("watchfiles.main").setLevel(logging.DEBUG)

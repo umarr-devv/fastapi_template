@@ -1,1 +1,2 @@
-from models.file import File, Base
+from models.file import File
+from models.user import User, Base

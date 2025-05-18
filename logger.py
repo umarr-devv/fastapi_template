@@ -1,12 +1,10 @@
-from logging import StreamHandler, basicConfig
 import logging
+from logging import StreamHandler, basicConfig
 from logging.handlers import TimedRotatingFileHandler
-from pathlib import Path
 
 from core.config import ConfigModel
+from core.paths import LOG_DIR
 
-LOG_DIR = Path('logs')
-LOG_DIR.mkdir(parents=True, exist_ok=True)
 LOG_FILE = LOG_DIR / '.log'
 LOG_FORMAT = '%(name)s | %(asctime)s | %(funcName)s | %(filename)s | %(levelname)s | %(message)s'
 LOG_INTERVAl = 7

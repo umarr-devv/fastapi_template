@@ -3,8 +3,7 @@ from uuid import uuid4
 
 from fastapi import UploadFile
 
-FILE_DIR = Path('files')
-FILE_DIR.mkdir(parents=True, exist_ok=True)
+from core.paths import FILE_DIR
 
 
 class FileService:

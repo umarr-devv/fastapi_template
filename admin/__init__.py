@@ -1,1 +1,1 @@
-from admin.admin import register_admin
+from admin.admin import AdminDashboard

@@ -6,9 +6,12 @@ from admin.user import UserAdmin
 from db.database import db
 
 
-def register_admin(app: FastAPI) -> None:
-    admin = Admin(
-        app, engine=db.engine, session_maker=db.session_factory
-    )
-    admin.add_view(FileAdmin)
-    admin.add_view(UserAdmin)
+class AdminDashboard:
+    views = [UserAdmin, FileAdmin]
+
+    @classmethod
+    def register(cls, app: FastAPI) -> None:
+        admin = Admin(
+            app, engine=db.engine, session_maker=db.session_factory
+        )
+        [admin.add_view(view) for view in cls.views]

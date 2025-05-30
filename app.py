@@ -1,24 +1,23 @@
 import uvicorn
 from fastapi import FastAPI
 
-from admin import register_admin
+from admin import AdminDashboard
 from api import router as api_router
-from core.config import config
-from core.logger import set_logging
-from core.templates import mount_static
-from views import router as views_router
 from core.cache import RedisCacheConfig
+from core.logger import Logging
+from core.templates import StaticAssets
+from views import router as views_router
+
+Logging.set()
+RedisCacheConfig.set()
 
 app = FastAPI()
-
-set_logging(config)
-register_admin(app)
-mount_static(app)
 
 app.include_router(api_router)
 app.include_router(views_router)
 
-RedisCacheConfig.set()
+AdminDashboard.register(app)
+StaticAssets.mount(app)
 
 
 def main():

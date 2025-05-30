@@ -1,30 +1,64 @@
-import os
+from pydantic import BaseModel, Field
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
-import dotenv
-from pydantic import BaseModel
 
-ENV_PATH = os.getcwd().join('.env')
-dotenv.load_dotenv()
+class ConfigBase(BaseSettings):
+    model_config = SettingsConfigDict(
+        env_file=".env", env_file_encoding="utf-8", extra="ignore"
+    )
+
+
+class DataBaseConfig(ConfigBase):
+    host: str
+    database: str
+    user: str
+    password: str
+
+    @property
+    def url(self) -> str:
+        return f"postgresql+asyncpg://{self.user}:{self.password}@{self.host}/{self.database}"
+
+    model_config = SettingsConfigDict(
+        env_prefix='pg_'
+    )
+
+
+class LoggingConfig(ConfigBase):
+    level: str
+    format: str
+    interval: int
+    when: str
+
+    model_config = SettingsConfigDict(
+        env_prefix='log_'
+    )
+
+
+class JWTConfig(ConfigBase):
+    private_key: str
+
+    model_config = SettingsConfigDict(
+        env_prefix='jwt_'
+    )
+
+
+class RedisConfig(ConfigBase):
+    host: str
+
+    model_config = SettingsConfigDict(
+        env_prefix='redis_'
+    )
 
 
 class ConfigModel(BaseModel):
-    pg_host: str
-    pg_database: str
-    pg_user: str
-    pg_password: str
-    log_level: str
-    jwt_private_key: str
+    database: DataBaseConfig = Field(default_factory=DataBaseConfig)
+    logging: LoggingConfig = Field(default_factory=LoggingConfig)
+    jwt: JWTConfig = Field(default_factory=JWTConfig)
+    redis: RedisConfig = Field(default_factory=RedisConfig)
 
-    @property
-    def database_url(self) -> str:
-        return f"postgresql+asyncpg://{self.pg_user}:{self.pg_password}@{self.pg_host}/{self.pg_database}"
+    @classmethod
+    def load(cls) -> 'ConfigModel':
+        return cls()
 
 
-config = ConfigModel(
-    pg_host=os.getenv('PG_HOST'),
-    pg_database=os.getenv('PG_DATABASE'),
-    pg_user=os.getenv('PG_USER'),
-    pg_password=os.getenv('PG_PASSWORD'),
-    log_level=os.getenv('LOG_LEVEL'),
-    jwt_private_key=os.getenv('JWT_PRIVATE_KEY'),
-)
+config = ConfigModel.load()

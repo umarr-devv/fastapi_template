@@ -1,5 +1,6 @@
 import logging
 
+from aiocache import cached
 from fastapi import APIRouter, HTTPException, Depends, status, Body
 from sqlalchemy.exc import IntegrityError
 from typing_extensions import Annotated
@@ -9,6 +10,7 @@ from models import User
 from repositories import RepositoryManager
 from schemes import UserScheme, CreateUserScheme, TokenScheme, LoginUserScheme, TokenPayloadScheme
 from services import HashService, JWTService
+from asyncio import sleep
 
 router = APIRouter(prefix='/users', tags=['users'])
 
@@ -43,6 +45,7 @@ async def on_create_user(
     path='',
     response_model=list[UserScheme]
 )
+@cached(ttl=60, key='all_users')
 async def on_get_users(
         rep_manager: Annotated[RepositoryManager, Depends(get_repositories)]
 ):

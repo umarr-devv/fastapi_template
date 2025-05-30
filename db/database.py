@@ -10,7 +10,7 @@ class DataBase:
 
     def __init__(self, config: ConfigModel) -> None:
         self.engine = create_async_engine(
-            url=config.database_url
+            url=config.database.url
         )
         self.session_factory = async_sessionmaker(
             bind=self.engine,

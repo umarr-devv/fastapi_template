@@ -23,6 +23,7 @@ uvicorn = "^0.34.2"
 black = "^25.1.0"
 hypercorn = "^0.17.3"
 alembic-postgresql-enum = "^1.7.0"
+aiofiles = "^24.1.0"
 
 
 [build-system]

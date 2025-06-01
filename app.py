@@ -7,11 +7,16 @@ from core.cache import RedisCacheConfig
 from core.logger import Logging
 from core.templates import StaticAssets
 from views import router as views_router
+from middlewares import CustomCorsMiddleware, CustomAPIMiddleware
+from core.lifespan import lifespan
 
 Logging.set()
 RedisCacheConfig.set()
 
-app = FastAPI()
+app = FastAPI(lifespan=lifespan)
+
+app.add_middleware(CustomCorsMiddleware)
+app.add_middleware(CustomAPIMiddleware)
 
 app.include_router(api_router)
 app.include_router(views_router)

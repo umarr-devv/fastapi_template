@@ -1,14 +1,17 @@
 import uvicorn
 from fastapi import FastAPI
+from starlette.requests import Request
+from starlette.responses import JSONResponse
 
 from admin import AdminDashboard
 from api import router as api_router
 from core.cache import RedisCacheConfig
+from core.error import ErrorHandler
+from core.lifespan import lifespan
 from core.logger import Logging
 from core.templates import StaticAssets
-from views import router as views_router
 from middlewares import CustomCorsMiddleware, CustomAPIMiddleware
-from core.lifespan import lifespan
+from views import router as views_router
 
 Logging.set()
 RedisCacheConfig.set()
@@ -23,6 +26,8 @@ app.include_router(views_router)
 
 AdminDashboard.register(app)
 StaticAssets.mount(app)
+
+ErrorHandler.set(app)
 
 
 def main():

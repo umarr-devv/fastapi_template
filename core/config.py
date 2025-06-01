@@ -13,6 +13,14 @@ class ConfigBase(BaseSettings):
     )
 
 
+class AppConfg(ConfigBase):
+    secret_key: str
+
+    model_config = SettingsConfigDict(
+        env_prefix='app_'
+    )
+
+
 class DataBaseConfig(ConfigBase):
     host: str
     database: str
@@ -55,11 +63,22 @@ class RedisConfig(ConfigBase):
     )
 
 
+class SuperAdminConfig(ConfigBase):
+    username: str
+    password: str
+
+    model_config = SettingsConfigDict(
+        env_prefix='admin_'
+    )
+
+
 class ConfigModel(BaseModel):
+    app: AppConfg = Field(default_factory=AppConfg)
     database: DataBaseConfig = Field(default_factory=DataBaseConfig)
     logging: LoggingConfig = Field(default_factory=LoggingConfig)
     jwt: JWTConfig = Field(default_factory=JWTConfig)
     redis: RedisConfig = Field(default_factory=RedisConfig)
+    admin: SuperAdminConfig = Field(default_factory=SuperAdminConfig)
 
     @classmethod
     def load(cls) -> 'ConfigModel':

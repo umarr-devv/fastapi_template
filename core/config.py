@@ -1,10 +1,13 @@
 from pydantic import BaseModel, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+LOCAL_ENV = '.env'
+DOCKER_ENIV = '.env-docker'
+
 
 class ConfigBase(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file=".env", env_file_encoding="utf-8", extra="ignore"
+        env_file=LOCAL_ENV, env_file_encoding="utf-8", extra="ignore"
     )
 
 

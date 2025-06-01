@@ -1,3 +1,21 @@
+### Uvicorn
+
+```bash
+python app.py
+```
+
+### Hypercorn
+
+```bash
+hypercorn app:app --config hypercorn.toml
+```
+
+### Docker
+
+```bash
+docker-compose up
+```
+
 ### Redis
 
 ```bash

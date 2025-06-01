@@ -3,9 +3,6 @@ import os
 from pydantic import BaseModel, Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-LOCAL_ENV = '.env'
-DOCKER_ENIV = '.env-docker'
-
 
 class ConfigBase(BaseSettings):
     model_config = SettingsConfigDict(

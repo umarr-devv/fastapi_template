@@ -1,7 +1,5 @@
 import uvicorn
 from fastapi import FastAPI
-from starlette.requests import Request
-from starlette.responses import JSONResponse
 
 from admin import AdminDashboard
 from api import router as api_router
@@ -11,6 +9,7 @@ from core.lifespan import lifespan
 from core.logger import Logging
 from core.templates import StaticAssets
 from middlewares import CustomCorsMiddleware, CustomAPIMiddleware
+from websocket import router as socket_router
 from views import router as views_router
 
 Logging.set()
@@ -23,6 +22,7 @@ app.add_middleware(CustomAPIMiddleware)
 
 app.include_router(api_router)
 app.include_router(views_router)
+app.include_router(socket_router)
 
 AdminDashboard.register(app)
 StaticAssets.mount(app)

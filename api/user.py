@@ -10,7 +10,6 @@ from models import User
 from repositories import RepositoryManager
 from schemes import UserScheme, CreateUserScheme, TokenScheme, LoginUserScheme, TokenPayloadScheme
 from services import HashService, JWTService
-from asyncio import sleep
 
 router = APIRouter(prefix='/users', tags=['users'])
 

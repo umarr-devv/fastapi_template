@@ -12,7 +12,7 @@ router = APIRouter(prefix='/health', tags=['health'])
 
 
 @router.get(
-    path='/health',
+    path='',
     response_model=HealthScheme
 )
 async def on_health(

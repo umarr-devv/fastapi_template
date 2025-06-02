@@ -11,10 +11,11 @@ services:
         env_file:
             - .env-docker
         environment:
-            - ENV_FILE=.env.docker
+            - ENV_FILE=.env-docker
         depends_on:
             - db
             - redis
+            - rabbitmq
 
     migrate:
         build: .
@@ -24,13 +25,30 @@ services:
         env_file:
             - .env-docker
         environment:
-            - ENV_FILE=.env.docker
+            - ENV_FILE=.env-docker
         depends_on:
+            - rabbitmq
+            - redis
+            - db
+
+    celery_worker:
+        build: .
+        container_name: celery_worker
+        command: celery --app celery_app.app.celery_app worker --pool threads --loglevel INFO
+        volumes:
+            - ./app:/code/app
+        env_file:
+            - .env-docker
+        environment:
+            - ENV_FILE=.env-docker
+        depends_on:
+            - rabbitmq
+            - redis
             - db
 
     db:
         image: postgres:latest
-        container_name: postgres_db
+        container_name: db
         restart: always
         environment:
             POSTGRES_USER: ${PG_USER}
@@ -50,6 +68,22 @@ services:
         ports:
             - "6379:6379"
 
+    rabbitmq:
+        image: rabbitmq:3-management
+        container_name: rabbitmq
+        ports:
+            - "5672:5672"
+            - "15672:15672"
+        environment:
+            RABBITMQ_DEFAULT_USER: ${USER}
+            RABBITMQ_DEFAULT_PASS: ${PASSWORD}
+        env_file:
+            - .env-docker
+        volumes:
+            - rabbitmq_data:/var/lib/rabbitmq
+        restart: unless-stopped
+
 
 volumes:
     pgdata:
+    rabbitmq_data:

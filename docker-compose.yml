@@ -7,7 +7,8 @@ services:
         ports:
             - "8000:8000"
         volumes:
-            - ./app:/code/app
+            - logs_data:/logs
+            - files_data:/files
         env_file:
             - .env-docker
         environment:
@@ -20,8 +21,6 @@ services:
     migrate:
         build: .
         command: alembic upgrade head
-        volumes:
-            - ./app:/code/app
         env_file:
             - .env-docker
         environment:
@@ -35,8 +34,6 @@ services:
         build: .
         container_name: celery_worker
         command: celery --app celery_app.app.celery_app worker --pool threads --loglevel INFO
-        volumes:
-            - ./app:/code/app
         env_file:
             - .env-docker
         environment:
@@ -47,7 +44,7 @@ services:
             - db
 
     db:
-        image: postgres:latest
+        image: postgres:17.5
         container_name: db
         restart: always
         environment:
@@ -60,16 +57,26 @@ services:
             - "5432:5432"
         volumes:
             - pgdata:/var/lib/postgresql/data
+        healthcheck:
+            test: ['CMD-SHELL', "pg_isready -U ${PG_USER}"]
+            interval: 60s
+            timeout: 5s
+            retries: 1
 
     redis:
-        image: redis:latest
+        image: redis:8.0.2
         container_name: redis
         restart: always
         ports:
             - "6379:6379"
+        healthcheck:
+            test: ["CMD", "redis-cli", "ping"]
+            interval: 60s
+            timeout: 5s
+            retries: 5
 
     rabbitmq:
-        image: rabbitmq:3-management
+        image: rabbitmq:4.1.0-management
         container_name: rabbitmq
         ports:
             - "5672:5672"
@@ -82,8 +89,15 @@ services:
         volumes:
             - rabbitmq_data:/var/lib/rabbitmq
         restart: unless-stopped
+        healthcheck:
+            test: ["CMD-SHELL", "rabbitmqctl status"]
+            interval: 60s
+            timeout: 5s
+            retries: 5
 
 
 volumes:
     pgdata:
     rabbitmq_data:
+    logs_data:
+    files_data:

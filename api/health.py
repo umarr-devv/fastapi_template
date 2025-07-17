@@ -4,7 +4,7 @@ from fastapi import APIRouter, HTTPException, Depends, status
 from sqlalchemy import text
 from typing_extensions import Annotated
 
-from deps import get_repositories
+from deps import get_rep_manager
 from repositories import RepositoryManager
 from schemes import HealthScheme
 
@@ -16,7 +16,7 @@ router = APIRouter(prefix='/health', tags=['health'])
     response_model=HealthScheme
 )
 async def on_health(
-        rep_manager: Annotated[RepositoryManager, Depends(get_repositories)],
+        rep_manager: Annotated[RepositoryManager, Depends(get_rep_manager)],
 ):
     try:
         await rep_manager.session.execute(text('SELECT 0'))

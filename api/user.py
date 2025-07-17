@@ -5,7 +5,7 @@ from fastapi import APIRouter, HTTPException, Depends, status, Body
 from sqlalchemy.exc import IntegrityError
 from typing_extensions import Annotated
 
-from deps import get_repositories, get_user
+from deps import get_rep_manager, get_user
 from models import User
 from repositories import RepositoryManager
 from schemes import UserScheme, CreateUserScheme, TokenScheme, LoginUserScheme, TokenPayloadScheme
@@ -20,11 +20,15 @@ router = APIRouter(prefix='/users', tags=['users'])
 )
 async def on_create_user(
         data: Annotated[CreateUserScheme, Body(...)],
-        rep_manager: Annotated[RepositoryManager, Depends(get_repositories)]
+        rep_manager: Annotated[RepositoryManager, Depends(get_rep_manager)]
 ):
     try:
-        data.password = HashService.to_hash(data.password)
-        user = await rep_manager.user.new(**data.model_dump())
+        user = User(
+            username=data.username,
+            fullname=data.fullname,
+            password=HashService.to_hash(data.password)
+        )
+        await rep_manager.add(user)
         await rep_manager.commit()
         return user
     except IntegrityError as exc:
@@ -46,9 +50,11 @@ async def on_create_user(
 )
 @cached(ttl=60, key='all_users')
 async def on_get_users(
-        rep_manager: Annotated[RepositoryManager, Depends(get_repositories)]
+        rep_manager: Annotated[RepositoryManager, Depends(get_rep_manager)]
 ):
-    return await rep_manager.user.all()
+    return await rep_manager.by_condition_all(
+        model=User, limit=100
+    )
 
 
 @router.post(
@@ -57,10 +63,10 @@ async def on_get_users(
 )
 async def on_user_login(
         data: Annotated[LoginUserScheme, Body(...)],
-        rep_manager: Annotated[RepositoryManager, Depends(get_repositories)]
+        rep_manager: Annotated[RepositoryManager, Depends(get_rep_manager)]
 ):
-    user = await rep_manager.user.by_filter_one(
-        username=data.username
+    user = await rep_manager.by_condition_one(
+        User, User.username == data.username
     )
     if not user:
         raise HTTPException(

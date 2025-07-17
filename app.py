@@ -27,7 +27,8 @@ app.include_router(socket_router)
 AdminDashboard.register(app)
 StaticAssets.mount(app)
 
-ErrorHandler.set(app)
+
+# ErrorHandler.set(app)
 
 
 def main():

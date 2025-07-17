@@ -6,7 +6,7 @@ from db.database import db
 from repositories import RepositoryManager
 
 
-def get_repositories(
+def get_rep_manager(
         session: Annotated[AsyncSession, Depends(db.session_dependency)]
 ) -> RepositoryManager:
     return RepositoryManager(session)

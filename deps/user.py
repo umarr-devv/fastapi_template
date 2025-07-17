@@ -4,7 +4,7 @@ from fastapi import Depends, Header, HTTPException, status
 from jwt.exceptions import ExpiredSignatureError, InvalidSignatureError
 from typing_extensions import Annotated
 
-from deps.repository import get_repositories
+from deps.repository import get_rep_manager
 from models import User
 from repositories import RepositoryManager
 from services import JWTService
@@ -12,7 +12,7 @@ from services import JWTService
 
 async def get_user(
         authorization: Annotated[str, Header(...)],
-        rep_manager: Annotated[RepositoryManager, Depends(get_repositories)]
+        rep_manager: Annotated[RepositoryManager, Depends(get_rep_manager)]
 ) -> User:
     if not authorization:
         raise HTTPException(
@@ -25,7 +25,7 @@ async def get_user(
             data = JWTService.decode(token)
             id_, exp = data['sub'], data['exp']
 
-            user = await rep_manager.user.by_id(int(id_))
+            user = await rep_manager.by_id(User, id_=int(id_))
             if user:
                 return user
         except ExpiredSignatureError:

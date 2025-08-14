@@ -1,10 +1,12 @@
-### Alembic (create)
+# COMMANDS
+
+## Alembic (create)
 
 ```bash
 alembic revision --autogenerate
 ```
 
-### Alembic(execute)
+## Alembic(execute)
 
 ```bash
 alembic upgrade head
@@ -25,7 +27,7 @@ hypercorn app:app --config hypercorn.toml
 ### Docker
 
 ```bash
-docker-compose up
+docker-compose up --build --force-recreate
 ```
 
 ### Redis
@@ -42,8 +44,8 @@ docker run -d --name redis \
 docker run -d --hostname my-rabbit --name rabbitmq-dev -p 5672:5672 -p 15672:15672 rabbitmq:4.1.0-management
 ```
 
-Celery
+### Celery
 
-```
+```sh
 celery --app celery_app.app.celery_app worker --pool threads --loglevel INFO
 ```

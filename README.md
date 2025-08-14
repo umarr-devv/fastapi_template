@@ -1,3 +1,15 @@
+### Alembic (create)
+
+```bash
+alembic revision --autogenerate
+```
+
+### Alembic(execute)
+
+```bash
+alembic upgrade head
+```
+
 ### Uvicorn
 
 ```bash

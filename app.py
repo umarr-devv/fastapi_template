@@ -8,9 +8,9 @@ from core.error import ErrorHandler
 from core.lifespan import lifespan
 from core.logger import Logging
 from core.templates import StaticAssets
-from middlewares import CustomCorsMiddleware, CustomAPIMiddleware
-from websocket import router as socket_router
+from middlewares import CustomAPIMiddleware, CustomCorsMiddleware
 from views import router as views_router
+from websocket import router as socket_router
 
 Logging.set()
 RedisCacheConfig.set()
@@ -28,12 +28,9 @@ AdminDashboard.register(app)
 StaticAssets.mount(app)
 
 
-# ErrorHandler.set(app)
-
-
 def main():
-    uvicorn.run('app:app', host='0.0.0.0', port=8000, reload=True)
+    uvicorn.run("app:app", host="0.0.0.0", port=8000, reload=True)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

@@ -8,7 +8,7 @@ class Base(DeclarativeBase):
     __abstract__ = True
 
     @staticmethod
-    def utc_now(self) -> datetime:
+    def utc_now() -> datetime:
         return datetime.now(timezone.utc)
 
     id: Mapped[int] = mapped_column(

@@ -7,12 +7,8 @@ services:
         ports:
             - "8000:8000"
         volumes:
-            - logs_data:/logs
-            - files_data:/files
-        env_file:
-            - .env-docker
-        environment:
-            - ENV_FILE=.env-docker
+            - ./volumes/logs_data:/logs
+            - ./volumes/files_data:/files
         depends_on:
             - db
             - redis
@@ -20,11 +16,7 @@ services:
 
     migrate:
         build: .
-        command: alembic upgrade head
-        env_file:
-            - .env-docker
-        environment:
-            - ENV_FILE=.env-docker
+        command: sh -c "sleep 20 && alembic upgrade head"
         depends_on:
             - rabbitmq
             - redis
@@ -34,10 +26,6 @@ services:
         build: .
         container_name: celery_worker
         command: celery --app celery_app.app.celery_app worker --pool threads --loglevel INFO
-        env_file:
-            - .env-docker
-        environment:
-            - ENV_FILE=.env-docker
         depends_on:
             - rabbitmq
             - redis
@@ -48,20 +36,18 @@ services:
         container_name: db
         restart: always
         environment:
-            POSTGRES_USER: ${PG_USER}
-            POSTGRES_PASSWORD: ${PG_PASSWORD}
-            POSTGRES_DB: ${PG_DATABASE}
-        env_file:
-            - .env-docker
+            POSTGRES_USER: ${pg_user}
+            POSTGRES_PASSWORD: ${pg_password}
+            POSTGRES_DB: ${pg_database}
         ports:
             - "5432:5432"
         volumes:
-            - pgdata:/var/lib/postgresql/data
+            - ./volumes/postgresql_data:/var/lib/postgresql/data
         healthcheck:
-            test: ['CMD-SHELL', "pg_isready -U ${PG_USER}"]
+            test: ['CMD-SHELL', "pg_isready -U ${pg_user}"]
             interval: 60s
             timeout: 5s
-            retries: 1
+            retries: 5
 
     redis:
         image: redis:8.0.2
@@ -74,6 +60,8 @@ services:
             interval: 60s
             timeout: 5s
             retries: 5
+        volumes:
+            - ./volumes/redis_data:/data
 
     rabbitmq:
         image: rabbitmq:4.1.0-management
@@ -82,22 +70,19 @@ services:
             - "5672:5672"
             - "15672:15672"
         environment:
-            RABBITMQ_DEFAULT_USER: ${USER}
-            RABBITMQ_DEFAULT_PASS: ${PASSWORD}
-        env_file:
-            - .env-docker
+            RABBITMQ_DEFAULT_USER: ${rabbit_mq_username}
+            RABBITMQ_DEFAULT_PASS: ${rabbit_mq_password}
         volumes:
-            - rabbitmq_data:/var/lib/rabbitmq
+            - ./volumes/rabbitmq_data:/var/lib/rabbitmq
         restart: unless-stopped
         healthcheck:
             test: ["CMD-SHELL", "rabbitmqctl status"]
             interval: 60s
             timeout: 5s
             retries: 5
-
-
-volumes:
-    pgdata:
-    rabbitmq_data:
-    logs_data:
-    files_data:
+    
+    adminer:
+        image: adminer
+        restart: always
+        ports:
+            - 8080:8080

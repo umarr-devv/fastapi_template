@@ -2,6 +2,7 @@ from datetime import datetime, timezone
 
 from sqlalchemy import DateTime
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from uuid6 import uuid7
 
 
 class Base(DeclarativeBase):
@@ -11,9 +12,11 @@ class Base(DeclarativeBase):
     def utc_now() -> datetime:
         return datetime.now(timezone.utc)
 
-    id: Mapped[int] = mapped_column(
-        autoincrement=True, unique=True, primary_key=True
-    )
+    @staticmethod
+    def uuid() -> str:
+        return str(uuid7())
+
+    id: Mapped[str] = mapped_column(unique=True, primary_key=True, default=uuid)
     create_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=utc_now
     )
@@ -22,4 +25,4 @@ class Base(DeclarativeBase):
     )
 
     def __str__(self) -> str:
-        return f'<{self.__class__.__name__}: {self.id}>'
+        return f"<{self.__class__.__name__}: {self.id}>"

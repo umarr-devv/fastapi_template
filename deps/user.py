@@ -24,7 +24,7 @@ async def get_user(
         data = JWTService.decode(jwt_token)
         id_, exp = data["sub"], data["exp"]
 
-        user = await rep_manager.by_id(User, id_=int(id_))
+        user = await rep_manager.by_id(User, id_=str(id_))
         if user:
             return user
     except ExpiredSignatureError:

@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: d0eb35841d51
+Revision ID: b64f18f9fed1
 Revises:
-Create Date: 2025-07-17 20:32:16.418970
+Create Date: 2025-09-21 22:01:26.566633
 
 """
 
@@ -13,7 +13,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = "d0eb35841d51"
+revision: str = "b64f18f9fed1"
 down_revision: Union[str, None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -26,7 +26,7 @@ def upgrade() -> None:
         "files",
         sa.Column("file_name", sa.String(), nullable=False),
         sa.Column("file_type", sa.String(), nullable=False),
-        sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
+        sa.Column("id", sa.String(), nullable=False),
         sa.Column("create_at", sa.DateTime(timezone=True), nullable=False),
         sa.Column("update_at", sa.DateTime(timezone=True), nullable=False),
         sa.PrimaryKeyConstraint("id"),
@@ -38,7 +38,7 @@ def upgrade() -> None:
         sa.Column("username", sa.String(length=64), nullable=False),
         sa.Column("fullname", sa.String(length=255), nullable=True),
         sa.Column("password", sa.String(), nullable=False),
-        sa.Column("id", sa.Integer(), autoincrement=True, nullable=False),
+        sa.Column("id", sa.String(), nullable=False),
         sa.Column("create_at", sa.DateTime(timezone=True), nullable=False),
         sa.Column("update_at", sa.DateTime(timezone=True), nullable=False),
         sa.PrimaryKeyConstraint("id"),

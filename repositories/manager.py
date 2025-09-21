@@ -28,7 +28,7 @@ class RepositoryManager:
     async def execute(self, stmt: Select) -> Result:
         return await self.session.execute(stmt)
 
-    async def by_id(self, model: type[T], id_: int | Mapped[int]) -> T | None:
+    async def by_id(self, model: type[T], id_: str | Mapped[int]) -> T | None:
         stmt = select(model).where(model.id == id_).limit(1)
         result = await self.session.execute(stmt)
         return result.scalar()

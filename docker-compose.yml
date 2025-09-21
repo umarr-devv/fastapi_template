@@ -63,24 +63,6 @@ services:
         volumes:
             - ./volumes/redis_data:/data
 
-    rabbitmq:
-        image: rabbitmq:4.1.0-management
-        container_name: rabbitmq
-        ports:
-            - "5672:5672"
-            - "15672:15672"
-        environment:
-            RABBITMQ_DEFAULT_USER: ${rabbit_mq_username}
-            RABBITMQ_DEFAULT_PASS: ${rabbit_mq_password}
-        volumes:
-            - ./volumes/rabbitmq_data:/var/lib/rabbitmq
-        restart: unless-stopped
-        healthcheck:
-            test: ["CMD-SHELL", "rabbitmqctl status"]
-            interval: 60s
-            timeout: 5s
-            retries: 5
-    
     adminer:
         image: adminer
         restart: always

@@ -52,18 +52,6 @@ class RedisConfig(ConfigBase):
     model_config = SettingsConfigDict(env_prefix="redis_")
 
 
-class RabbitMQConfig(ConfigBase):
-    host: str
-    username: str
-    password: str
-
-    model_config = SettingsConfigDict(env_prefix="rabbit_mq_")
-
-    @property
-    def url(self):
-        return f"amqp://{self.username}:{self.password}@{self.host}:5672"
-
-
 class SuperAdminConfig(ConfigBase):
     username: str
     password: str
@@ -78,7 +66,6 @@ class ConfigModel(BaseModel):
     jwt: JWTConfig = Field(default_factory=JWTConfig)  # type: ignore
     redis: RedisConfig = Field(default_factory=RedisConfig)  # type: ignore
     admin: SuperAdminConfig = Field(default_factory=SuperAdminConfig)  # type: ignore
-    rabbit_mq: RabbitMQConfig = Field(default_factory=RabbitMQConfig)  # type: ignore
 
     @classmethod
     def load(cls) -> "ConfigModel":

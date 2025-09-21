@@ -31,6 +31,7 @@ pytest-asyncio = "^1.0.0"
 itsdangerous = "^2.2.0"
 celery = "^5.5.3"
 httpx = "^0.28.1"
+uuid6 = "^2025.0.1"
 
 
 [build-system]

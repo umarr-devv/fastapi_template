@@ -4,9 +4,11 @@ __pycache__/
 *.py[cod]
 *$py.class
 /files/*
+!/files/.gitkeep
 # C extensions
 *.so
 /logs/*
+!/logs/.gitkeep
 # Distribution / packaging
 .Python
 build/

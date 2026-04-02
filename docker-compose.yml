@@ -1,8 +1,8 @@
-version: "3.9"
-
 services:
-    web:
-        build: .
+    app:
+        build:
+            context: .
+            network: host
         container_name: app
         ports:
             - "8000:8000"
@@ -11,24 +11,13 @@ services:
             - ./volumes/files_data:/files
         depends_on:
             - db
-            - redis
-            - rabbitmq
 
     migrate:
-        build: .
-        command: sh -c "sleep 20 && alembic upgrade head"
+        build:
+            context: .
+            network: host
+        command: sh -c "sleep 5 && alembic upgrade head"
         depends_on:
-            - rabbitmq
-            - redis
-            - db
-
-    celery_worker:
-        build: .
-        container_name: celery_worker
-        command: celery --app celery_app.app.celery_app worker --pool threads --loglevel INFO
-        depends_on:
-            - rabbitmq
-            - redis
             - db
 
     db:
@@ -39,29 +28,8 @@ services:
             POSTGRES_USER: ${pg_user}
             POSTGRES_PASSWORD: ${pg_password}
             POSTGRES_DB: ${pg_database}
-        ports:
-            - "5432:5432"
         volumes:
             - ./volumes/postgresql_data:/var/lib/postgresql/data
-        healthcheck:
-            test: ['CMD-SHELL', "pg_isready -U ${pg_user}"]
-            interval: 60s
-            timeout: 5s
-            retries: 5
-
-    redis:
-        image: redis:8.0.2
-        container_name: redis
-        restart: always
-        ports:
-            - "6379:6379"
-        healthcheck:
-            test: ["CMD", "redis-cli", "ping"]
-            interval: 60s
-            timeout: 5s
-            retries: 5
-        volumes:
-            - ./volumes/redis_data:/data
 
     adminer:
         image: adminer

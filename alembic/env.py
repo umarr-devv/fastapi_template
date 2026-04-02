@@ -1,17 +1,25 @@
 import asyncio
+import os
+import sys
 from logging.config import fileConfig
 
-from alembic import context
+import alembic_postgresql_enum
 from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
-import alembic_postgresql_enum
-from models import Base
+
+from alembic import context
+
+sys.path.insert(
+    0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "src"))
+)
+
+from models import Base  # noqa
+from core.config import config as core_config  # noqa
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
 config = context.config
-from core.config import config as core_config
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
@@ -22,7 +30,7 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-config.set_main_option('sqlalchemy.url', core_config.database.url)
+config.set_main_option("sqlalchemy.url", core_config.database.url)
 target_metadata = Base.metadata
 
 
